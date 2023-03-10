@@ -493,7 +493,215 @@ begin
 		
 end $$;
 
+-- Task : sayac isminde bir degisken olusturun ve dongu icinde sayaci birer artirin, 
+--her dongude sayacin degerini ekrana basin ve sayac degeri 5 e esit olunca donguden cikin
 
+
+do $$
+
+declare
+	sayac integer:=0;
+
+begin
+	loop 
+		raise notice '%',sayac;
+		sayac:=sayac+1;
+		exit when sayac=5;
+	end loop;
+		
+end $$;
+
+-- **************  FOR LOOP *********************
+
+-- syntax
+
+for loop_counter in [reverse] from..to [by step] loop
+	statements;
+end loop ;
+
+
+-- in
+
+do $$
+begin
+	for counter in 1..6 loop
+		raise notice 'counter: %', counter;
+	end loop;	
+
+end $$;
+
+-- reverse ( Ornek )
+
+do $$
+begin
+	for counter in reverse 5..1 loop
+		raise notice 'counter : %', counter;
+	end loop;
+end $$;
+
+-- by ( Ornek )
+
+do $$
+begin
+	for counter in 0..10 by 2 loop
+		raise notice 'counter : %', counter;
+	end loop;	
+end $$;
+
+-- Task : 10 dan 20 ye kadar 2 ser 2 ser ekrana sayilari basalim : 
+
+do $$
+
+begin
+	for counter in 10..20 by 2 loop
+		raise notice '%' , counter;
+	end loop;
+end $$;
+
+-- Task : olusturulan array'in elemanlarini array seklinde gosterelim : 
+
+do $$
+declare
+    array_int int[] := array[11,22,33,44,55,66,77,88];
+    var int[];
+begin 
+	for var in select array_int loop
+		raise notice '%', var;
+	end loop;
+end $$;
+
+-- DB de loop kullanimi
+--syntax :
+
+for target in query loop
+    statement
+end loop;
+
+-- Task : Filmleri süresine göre sıraladığımızda en uzun 2 filmi gösterelim
+
+do $$
+
+declare
+	f record;
+
+begin
+	for f in select title,length from film order by length desc limit 2 loop
+		raise notice '%(% dakika)', f.title, f.length;
+	end loop;
+
+end $$;
+
+--------------------
+
+CREATE TABLE employees (
+  employee_id serial PRIMARY KEY,
+  full_name VARCHAR NOT NULL,
+  manager_id INT
+);
+INSERT INTO employees (
+  employee_id,
+  full_name,
+  manager_id
+)
+VALUES
+  (1, 'M.S Dhoni', NULL),
+  (2, 'Sachin Tendulkar', 1),
+  (3, 'R. Sharma', 1),
+  (4, 'S. Raina', 1),
+  (5, 'B. Kumar', 1),
+  (6, 'Y. Singh', 2),
+  (7, 'Virender Sehwag ', 2),
+  (8, 'Ajinkya Rahane', 2),
+  (9, 'Shikhar Dhawan', 2),
+  (10, 'Mohammed Shami', 3),
+  (11, 'Shreyas Iyer', 3),
+  (12, 'Mayank Agarwal', 3),
+  (13, 'K. L. Rahul', 3),
+  (14, 'Hardik Pandya', 4),
+  (15, 'Dinesh Karthik', 4),
+  (16, 'Jasprit Bumrah', 7),
+  (17, 'Kuldeep Yadav', 7),
+  (18, 'Yuzvendra Chahal', 8),
+  (19, 'Rishabh Pant', 8),
+  (20, 'Sanju Samson', 8);
+  
+  select * from employees
+ 
+-- Task :  employee ID si en buyuk ilk 10 kisiyi ekrana yazalim 
+
+do $$
+
+declare 
+	f record;
+
+begin
+	for f in select employee_id,full_name from employees order by employee_id desc limit 10 loop
+		raise notice '% -> %', f.employee_id,f.full_name;
+	end loop;
+
+end $$;
+
+-- ******** EXIT *************
+
+exit when counter > 10 ;
+
+-- yukardakini if ile yazmak istersem 
+-- alttaki ve ustteki kod ayni isi yapiyor
+
+if counter > 10 then 
+    exit;
+end if;
+
+-- Ornek 
+
+do $$
+begin
+    <<inner_block>>
+    begin
+        exit inner_block;
+        raise notice 'inner block dan merhaba';
+    end;
+    
+    raise notice 'outher blockdan merhaba';
+end $$;
+
+-- ************** CONTINUE ****************
+-- mevcut iterasyonu atmalak icin kullanilir
+
+-- syntax :
+continue [loop_label] [when condition] -- [] bu kısımlar opsiyoneldir
+
+-- Task : continue yapisi kullanarak 1 dahil 10 a kadar olan tek sayilari ekrana basalim
+
+do $$
+
+declare 
+	counter integer :=0;
+
+begin
+	loop 
+		counter := counter + 1; -- loop icinde counter degerim 1 artiriliyor
+        exit when counter > 10; -- counter degerim 10 dan buyuk olursa loop dan cik
+        continue when mod(counter,2)=0; -- counter cift ise bu iterasyonu terk et
+        raise notice '%', counter; -- counter degerimi ekrana basiyorum
+		
+	end loop;
+
+end $$;
+
+-- ******************************************************** 
+--  ********************* FUNCTION ***********************
+-- ********************************************************
+
+
+
+
+
+
+
+
+
+ 
 
 
 		
